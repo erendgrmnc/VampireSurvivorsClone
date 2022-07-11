@@ -14,12 +14,14 @@ public class Player : MonoBehaviour
 
     public float runSpeed = 20.0f;
 
+    public float attackInterval = 5f;
+
     Vector3 bottomLeftLimit;
     Vector3 topRightLimit;
 
     Animator animator;
-
     public bool CanMove { get; set; }
+    bool isCurrentlyAttacking = false;
 
     // Start is called before the first frame update
 
@@ -40,6 +42,8 @@ public class Player : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         CanMove = true;
+
+        InvokeRepeating("Attack", 1f, 3f);
     }
 
     void Update()
@@ -69,12 +73,12 @@ public class Player : MonoBehaviour
                 horizontal *= moveLimiter;
                 vertical *= moveLimiter;
             }
-
             body.velocity = new Vector2(horizontal * runSpeed, vertical * runSpeed);
             Animate();
         }
         else
         {
+            animator.SetBool("IsPlayerMoving", false);
             body.velocity = Vector3.zero;
         }
 
@@ -83,6 +87,21 @@ public class Player : MonoBehaviour
 
     void Animate()
     {
+        float moveX = body.velocity.x;
+        float moveY = body.velocity.y;
+
+        bool horizontalMovement = moveX > 0.1 || moveX < -0.1;
+        bool verticalMovement = moveY > 0.1 || moveY < -0.1;
+
+        if (verticalMovement || horizontalMovement)
+        {
+            animator.SetBool("IsPlayerMoving", true);
+        }
+        else
+        {
+            animator.SetBool("IsPlayerMoving", false);
+        }
+
         animator.SetFloat("MoveX", body.velocity.x);
         animator.SetFloat("MoveY", body.velocity.y);
 
@@ -103,5 +122,26 @@ public class Player : MonoBehaviour
     {
         bottomLeftLimit = botLeft + new Vector3(0.5f, 0.5f, 0f);
         topRightLimit = topRight + new Vector3(-0.5f, -0.5f, 0f);
+    }
+
+    void Attack()
+    {
+        if (!isCurrentlyAttacking)
+        {
+            animator.SetBool("IsAttacking", true);
+            var state = animator.GetCurrentAnimatorStateInfo(0);
+            isCurrentlyAttacking = true;
+            Debug.Log("Attack interval: " +  state.length);
+            StartCoroutine(InstantiateProjectile(state.length));
+        }
+    }
+
+    IEnumerator InstantiateProjectile(float interval)
+    {
+        yield return new WaitForSeconds(interval);
+
+        Debug.Log("Player Attacked ! Attack: " + animator.GetBool("IsAttacking") + " Moving: " + animator.GetBool("IsPlayerMoving"));
+        animator.SetBool("IsAttacking", false);
+        isCurrentlyAttacking = false;
     }
 }
