@@ -23,6 +23,10 @@ public class Player : MonoBehaviour
     public bool CanMove { get; set; }
     bool isCurrentlyAttacking = false;
 
+    public Transform attackPoint;
+    PlayerProjectileManager playerProjectileManager;
+
+
     // Start is called before the first frame update
 
     private void Awake()
@@ -42,6 +46,7 @@ public class Player : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         CanMove = true;
+        playerProjectileManager = GetComponentInChildren(typeof(PlayerProjectileManager)) as PlayerProjectileManager;
 
         InvokeRepeating("Attack", 1f, 3f);
     }
@@ -109,7 +114,6 @@ public class Player : MonoBehaviour
         {
             animator.SetFloat("LastMoveX", Input.GetAxisRaw("Horizontal"));
             animator.SetFloat("LastMoveY", Input.GetAxisRaw("Vertical"));
-
         }
     }
 
@@ -131,17 +135,48 @@ public class Player : MonoBehaviour
             animator.SetBool("IsAttacking", true);
             var state = animator.GetCurrentAnimatorStateInfo(0);
             isCurrentlyAttacking = true;
-            Debug.Log("Attack interval: " +  state.length);
+            Debug.Log("Attack interval: " + state.length);
             StartCoroutine(InstantiateProjectile(state.length));
         }
     }
 
     IEnumerator InstantiateProjectile(float interval)
     {
+        //TODO: GET PROJECTILE FROM PROJECTILE MANAGER
+        var projectile = playerProjectileManager.GetPoolObject();
+        projectile.transform.position = attackPoint.transform.position;
+        SetupProjectile(projectile);
         yield return new WaitForSeconds(interval);
 
         Debug.Log("Player Attacked ! Attack: " + animator.GetBool("IsAttacking") + " Moving: " + animator.GetBool("IsPlayerMoving"));
         animator.SetBool("IsAttacking", false);
         isCurrentlyAttacking = false;
+    }
+
+    void SetupProjectile(GameObject projectile)
+    {
+        float lastMoveX = animator.GetFloat("LastMoveX");
+        float lastMoveY = animator.GetFloat("LastMoveY");
+
+        if (lastMoveX > 0.1 && lastMoveX != 0 && lastMoveY == 0)
+        {
+            float zRotation = 180.0f;
+            projectile.transform.eulerAngles = new Vector3(projectile.transform.eulerAngles.x, projectile.transform.eulerAngles.y, zRotation);
+        }
+        else if (lastMoveX < 0.1 && lastMoveX != 0 && lastMoveY == 0)
+        {
+            float zRotation = 0f;
+            projectile.transform.eulerAngles = new Vector3(projectile.transform.eulerAngles.x, projectile.transform.eulerAngles.y, zRotation);
+        }
+        else if (lastMoveY > 0.1 && lastMoveY != 0 && lastMoveX == 0)
+        {
+            float zRotation = 270.0f;
+            projectile.transform.eulerAngles = new Vector3(projectile.transform.eulerAngles.x, projectile.transform.eulerAngles.y, zRotation);
+        }
+        else if (lastMoveY < 0.1 && lastMoveY != 0 && lastMoveX == 0 || (lastMoveX == 0 && lastMoveY == 0))
+        {
+            float zRotation = 90.0f;
+            projectile.transform.eulerAngles = new Vector3(projectile.transform.eulerAngles.x, projectile.transform.eulerAngles.y, zRotation);
+        }
     }
 }
