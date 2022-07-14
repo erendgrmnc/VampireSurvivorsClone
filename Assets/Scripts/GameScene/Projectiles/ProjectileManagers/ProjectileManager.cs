@@ -26,13 +26,13 @@ public class ProjectileManager : MonoBehaviour
         {
             if (!poolObject.activeInHierarchy)
             {
-                poolObject.SetActive(true);
+                poolObject.GetComponent<Projectile>().SpawnProjectile();
                 return poolObject;
             }
         }
 
         var newPoolObj = CreateAndGetPoolObject();
-        newPoolObj.SetActive(true);
+        newPoolObj.GetComponent<Projectile>().SpawnProjectile();
         return newPoolObj;
     }
 

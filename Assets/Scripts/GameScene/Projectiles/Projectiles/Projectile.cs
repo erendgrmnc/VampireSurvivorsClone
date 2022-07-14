@@ -6,25 +6,22 @@ public class Projectile : MonoBehaviour
 {
     public float speed = 2f;
     public float lifeTime = 2f;
-    float passedTimeSinceOnScene = 0f;
-
-    virtual protected void Start()
-    {
-        InvokeRepeating("IncreasePassedTime", 1f, 1f);
-    }
 
     virtual protected void Update()
     {
-        CheckIsObjectDestroyable();
         Move();
     }
 
-    virtual protected void IncreasePassedTime()
+    virtual protected IEnumerator InvokeDestroyProjectile()
     {
-        if (gameObject.activeSelf)
-        {
-            passedTimeSinceOnScene++;
-        }
+        yield return new WaitForSeconds(lifeTime);
+        DestroyProjectile();
+    }
+
+    virtual public void SpawnProjectile()
+    {
+        gameObject.SetActive(true);
+        StartCoroutine(InvokeDestroyProjectile());
     }
 
     virtual protected void Move()
@@ -36,15 +33,11 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    virtual protected void CheckIsObjectDestroyable()
+    virtual protected void DestroyProjectile()
     {
         if (gameObject.activeSelf)
         {
-            if (passedTimeSinceOnScene == lifeTime)
-            {
-                gameObject.SetActive(false);
-                passedTimeSinceOnScene = 0f;
-            }
+            gameObject.SetActive(false);
         }
     }
 }

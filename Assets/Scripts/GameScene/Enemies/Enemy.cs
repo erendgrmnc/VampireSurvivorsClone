@@ -41,6 +41,7 @@ public class Enemy : MonoBehaviour
         else if (collision.tag == "Weapon")
         {
             gameObject.SetActive(false);
+            canMove = false;
         }
     }
 
