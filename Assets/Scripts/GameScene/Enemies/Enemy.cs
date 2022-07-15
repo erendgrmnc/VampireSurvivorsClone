@@ -8,6 +8,8 @@ public class Enemy : MonoBehaviour
 
     public float speed = 5f;
 
+    public float hp = 100f;
+
     Player player;
 
     bool canMove;
@@ -39,6 +41,21 @@ public class Enemy : MonoBehaviour
         }
 
         else if (collision.tag == "Weapon")
+        {
+            float projectileDamage = collision.gameObject.GetComponent<Projectile>().damage;
+            TakeDamage(projectileDamage);
+        }
+    }
+
+    protected virtual void TakeDamage(float damage)
+    {
+        hp -= damage;
+        CheckIsDestroyed();
+    }
+
+    protected virtual void CheckIsDestroyed()
+    {
+        if (hp <= 0)
         {
             gameObject.SetActive(false);
             canMove = false;
