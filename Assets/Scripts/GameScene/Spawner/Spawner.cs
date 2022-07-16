@@ -7,15 +7,20 @@ public class Spawner : MonoBehaviour
     public int amountToPool = 20;
     public GameObject objectOfPool;
     List<GameObject> spawnableObjects;
+    GameObject objectGroup;
+    private string objectGroupName = "";
 
-    protected void InitPool()
+    protected void InitPool(string objectGroupName)
     {
+        this.objectGroupName = objectGroupName;
+        objectGroup = new GameObject(objectGroupName);
         spawnableObjects = new List<GameObject>();
         GameObject tmpObject;
         for (int i = 0; i < amountToPool; i++)
         {
             tmpObject = Instantiate(objectOfPool);
             tmpObject.SetActive(false);
+            tmpObject.transform.parent = objectGroup.transform;
             spawnableObjects.Add(tmpObject);
         }
     }
@@ -32,6 +37,7 @@ public class Spawner : MonoBehaviour
 
         GameObject newPoolObject = Instantiate(objectOfPool);
         newPoolObject.SetActive(false);
+        newPoolObject.transform.parent = objectGroup.transform;
         spawnableObjects.Add(newPoolObject);
         return newPoolObject;
     }

@@ -9,14 +9,8 @@ public class EnemySpawner : Spawner
     // Start is called before the first frame update
     void Start()
     {
-        InitPool();
+        InitPool("Enemy");
         StartCoroutine(SpawnEnemies(enemySpawnInterval, objectOfPool));
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public virtual IEnumerator SpawnEnemies(float interval, GameObject enemyToSpawn)
