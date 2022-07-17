@@ -26,6 +26,4 @@ public class Spider : Enemy
             collectible.transform.position = gameObject.transform.position;
         }
     }
-
-
 }
