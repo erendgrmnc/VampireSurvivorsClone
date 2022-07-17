@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public float damage = 1f;
+    public float damage = 10f;
 
     public float speed = 5f;
 
     public float hp = 100f;
 
     Player player;
+    PlayerHealthManager playerHealthManager;
 
     bool canMove;
 
@@ -18,6 +19,7 @@ public class Enemy : MonoBehaviour
     {
         canMove = true;
         player = Player.Instance;
+        InitPlayerHealthManager();
     }
 
     protected virtual void MoveTowardsPlayer()
@@ -32,6 +34,7 @@ public class Enemy : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
+            playerHealthManager.DamagePlayer(damage);
             Debug.Log("Hit !");
         }
 
@@ -68,6 +71,11 @@ public class Enemy : MonoBehaviour
         {
             canMove = true;
         }
+    }
+
+    void InitPlayerHealthManager()
+    {
+        playerHealthManager = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<PlayerHealthManager>();
     }
 
 }

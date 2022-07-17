@@ -9,17 +9,12 @@ using UnityEngine.UI;
 public class ProgressBar : MonoBehaviour
 {
     [Header("Bar Setting")]
-    public Color BarColor;   
+    public Color BarColor;
     public Color BarBackGroundColor;
     public Sprite BarBackGroundSprite;
     [Range(1f, 100f)]
     public int Alert = 20;
     public Color BarAlertColor;
-
-    [Header("Sound Alert")]
-    public AudioClip sound;
-    public bool repeat = false;
-    public float RepeatRate = 1f;
 
     private Image bar, barBackground;
     private float nextPlay;
@@ -55,16 +50,21 @@ public class ProgressBar : MonoBehaviour
     private void Awake()
     {
         bar = transform.Find("Bar").GetComponent<Image>();
-        barBackground = GetComponent<Image>();
-        barBackground = transform.Find("BarBackground").GetComponent<Image>();
-        audiosource = GetComponent<AudioSource>();
+        if (barBackground != null)
+        {
+            barBackground = GetComponent<Image>();
+            barBackground = transform.Find("BarBackground").GetComponent<Image>();
+        }
     }
 
     private void Start()
     {
         bar.color = BarColor;
-        barBackground.color = BarBackGroundColor; 
-        barBackground.sprite = BarBackGroundSprite;
+        if (barBackground != null)
+        {
+            barBackground.color = BarBackGroundColor;
+            barBackground.sprite = BarBackGroundSprite;
+        }
 
         UpdateValue(barValue);
     }
@@ -87,18 +87,13 @@ public class ProgressBar : MonoBehaviour
     private void Update()
     {
         if (!Application.isPlaying)
-        {           
-            bar.color = BarColor;
-            barBackground.color = BarBackGroundColor;
-
-            barBackground.sprite = BarBackGroundSprite;           
-        }
-        else
         {
-            if (Alert >= barValue && Time.time > nextPlay)
+            bar.color = BarColor;
+            if (barBackground != null)
             {
-                nextPlay = Time.time + RepeatRate;
-                //audiosource.PlayOneShot(sound);
+                barBackground.color = BarBackGroundColor;
+
+                barBackground.sprite = BarBackGroundSprite;
             }
         }
     }
