@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class AxeThrow : Power, IPower
 {
+    private Vector3 playerPosition;
+
     void Start()
     {
+        playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
+
         if (powerPrefab == null)
         {
             Destroy(gameObject);
@@ -17,14 +21,9 @@ public class AxeThrow : Power, IPower
         }
     }
 
-    void Update()
-    {
-        
-    }
-
     public void Attack()
     {
-
+        SpawnPowerObject(playerPosition);
     }
 
     public IEnumerator DestroyInstance()
@@ -37,13 +36,11 @@ public class AxeThrow : Power, IPower
     {
         if (collision.tag == "Enemy")
         {
-           var enemy = collision.gameObject.GetComponent<Enemy>();
-           if (enemy != null)
+            var enemy = collision.gameObject.GetComponent<Enemy>();
+            if (enemy != null)
             {
                 enemy.TakeDamage(damage);
             }
         }
     }
-
- 
 }
