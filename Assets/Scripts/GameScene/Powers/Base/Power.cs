@@ -1,6 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+public enum PowerType
+{
+    AxeThrow
+}
 
 public abstract class Power : MonoBehaviour
 {
@@ -11,7 +17,10 @@ public abstract class Power : MonoBehaviour
     [SerializeField]
     protected bool isTimeDestroyable = false;
     [SerializeField]
+    protected bool isDestroyableOnHit = false;
+    [SerializeField]
     protected float destroyTime = 5f;
+    [SerializeField] public PowerType PowerType { get; protected set; }
 
     protected virtual void SpawnPowerObject(Vector3 spawnPosition)
     {

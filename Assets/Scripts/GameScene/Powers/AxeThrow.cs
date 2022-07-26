@@ -6,6 +6,11 @@ public class AxeThrow : Power, IPower
 {
     private Vector3 playerPosition;
 
+    void Awake()
+    {
+        PowerType = PowerType.AxeThrow;
+    }
+
     void Start()
     {
         playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
@@ -14,16 +19,15 @@ public class AxeThrow : Power, IPower
         {
             Destroy(gameObject);
         }
-
-        if (isTimeDestroyable)
-        {
-            StartCoroutine("DestroyInstance");
-        }
     }
 
     public void Attack()
     {
         SpawnPowerObject(playerPosition);
+        if (isTimeDestroyable)
+        {
+            StartCoroutine("DestroyInstance");
+        }
     }
 
     public IEnumerator DestroyInstance()
@@ -40,6 +44,11 @@ public class AxeThrow : Power, IPower
             if (enemy != null)
             {
                 enemy.TakeDamage(damage);
+            }
+
+            if (isDestroyableOnHit)
+            {
+                gameObject.SetActive(false);
             }
         }
     }
