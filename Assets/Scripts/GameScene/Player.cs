@@ -179,4 +179,9 @@ public class Player : MonoBehaviour
             projectile.transform.eulerAngles = new Vector3(projectile.transform.eulerAngles.x, projectile.transform.eulerAngles.y, zRotation);
         }
     }
+
+    public int GetPlayerLastDirection()
+    {
+        return animator.GetFloat("LastMoveX") > 0 ? 1 : -1;
+    }
 }

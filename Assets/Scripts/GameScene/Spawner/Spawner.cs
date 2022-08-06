@@ -42,7 +42,7 @@ public class Spawner : MonoBehaviour
         return newPoolObject;
     }
 
-    protected virtual void SpawnObject(Vector3 spawnPosition)
+    public virtual void SpawnObject(Vector3 spawnPosition)
     {
         GameObject objectToSpawn = GetPooledObject();
         if (objectToSpawn != null)

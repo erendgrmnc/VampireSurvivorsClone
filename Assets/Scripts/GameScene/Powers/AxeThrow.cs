@@ -1,36 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class AxeThrow : Power, IPower
+public class AxeThrow : Power
 {
-    private Vector3 playerPosition;
+    private Rigidbody2D physics;
 
     void Awake()
     {
         PowerType = PowerType.AxeThrow;
+        physics = GetComponent<Rigidbody2D>();
     }
-
-    void Start()
+    
+    void OnEnable()
     {
-        playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
-
-        if (powerPrefab == null)
-        {
-            Destroy(gameObject);
-        }
+        AddForce();
     }
 
-    public void Attack()
+    void AddForce()
     {
-        SpawnPowerObject(playerPosition);
-        if (isTimeDestroyable)
-        {
-            StartCoroutine("DestroyInstance");
-        }
+        int playerLastXDirection = Player.Instance.GetPlayerLastDirection();
+
+        var forceVector = new Vector2(50 * playerLastXDirection, 500);
+        physics.AddForce(forceVector);
     }
 
-    public IEnumerator DestroyInstance()
+    public override IEnumerator DestroyInstance()
     {
         yield return new WaitForSeconds(destroyTime);
         gameObject.SetActive(false);
