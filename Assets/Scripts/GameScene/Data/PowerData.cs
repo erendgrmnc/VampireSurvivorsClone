@@ -7,31 +7,16 @@ using UnityEngine.UI;
 
 
 [Serializable]
-public class PowerData : MonoBehaviour
+public class PowerData
 {
+    [SerializeField] 
+    public string PowerName { get; set; }
     [SerializeField]
-    private Power PowerObject { get; set; }
-
-    public bool IsPowerUnlocked { get; private set; }
+    public bool IsPowerUnlocked { get; set; }
     [SerializeField]
-    private bool isPowerNeedsPooling;
+    public bool IsPowerNeedsPooling { get; set; }
     [SerializeField]
-    [HideInInspector] 
-    private int poolStartAmount;
-    
-    void OnInspectorGUI()
-    {
-        isPowerNeedsPooling = GUILayout.Toggle(isPowerNeedsPooling, "IsPowerNeedsPooling");
+    public int PoolStartAmount { get; set; }
 
-        if (isPowerNeedsPooling)
-            poolStartAmount = EditorGUILayout.IntSlider("PoolStartAmount:", poolStartAmount, 1, 100);
-    }
-
-    public void UnlockPower()
-    {
-        if (!IsPowerUnlocked)
-        {
-            IsPowerUnlocked = true;
-        }
-    }
+    public PowerManager PowerManager { get; set; }
 }

@@ -1,0 +1,8 @@
+[
+  {
+  "powerName": "AxeThrow",
+  "isPowerNeedsPooling": true,
+  "poolStartAmount": 5,
+  "IsPowerUnlocked": true
+  }
+]
