@@ -2,6 +2,6 @@ using System.Collections;
 
 public interface IPower
 {
-    void Attack();
+    void InitPower();
     IEnumerator DestroyInstance();
 }

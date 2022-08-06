@@ -8,34 +8,74 @@ public enum PowerType
     AxeThrow
 }
 
-public abstract class Power : MonoBehaviour
+public abstract class Power : MonoBehaviour, IPower
 {
-    [SerializeField]
-    protected GameObject powerPrefab;
     [SerializeField]
     protected float damage = 10f;
     [SerializeField]
+    protected float destroyTime = 0f;
+    [SerializeField] 
+    protected float cooldown = 3f;
+    [SerializeField]
+    protected int poolAmount = 0;
+   [SerializeField]
     protected bool isTimeDestroyable = false;
     [SerializeField]
     protected bool isDestroyableOnHit = false;
     [SerializeField]
-    protected float destroyTime = 5f;
-    [SerializeField] public PowerType PowerType { get; protected set; }
+    protected bool isCoolDownRequired = true;
+    [SerializeField]
+    public PowerType PowerType { get; protected set; }
+    [SerializeField] 
+    protected string powerName;
 
-    protected virtual void SpawnPowerObject(Vector3 spawnPosition)
+    public float GetPowerDamage()
     {
-        if (powerPrefab)
-        {
-            powerPrefab.SetActive(true);
-            powerPrefab.transform.position = spawnPosition;
-        }
+        return damage;
     }
 
-    protected virtual void DeactivatePowerObject()
+    public float GetDestroyTime()
     {
-        if (powerPrefab)
-        {
-            powerPrefab.SetActive(false);
-        }
+        return destroyTime;
+    }
+
+    public float GetCooldownTime()
+    {
+        return cooldown;
+    }
+
+    public int GetPoolAmount()
+    {
+        return poolAmount;
+    }
+
+    public bool GetIsTimeDestroyable()
+    {
+        return isTimeDestroyable;
+    }
+
+    public bool GetIsCooldownRequired()
+    {
+        return isCoolDownRequired;
+    }
+
+    public bool GetIsDestroyableOnHit()
+    {
+        return isDestroyableOnHit;
+    }
+
+    public string GetPowerName()
+    {
+        return powerName;
+    }
+
+    public void InitPower()
+    {
+        throw new NotImplementedException();
+    }
+    
+    public virtual IEnumerator DestroyInstance()
+    {
+        throw new NotImplementedException();
     }
 }
